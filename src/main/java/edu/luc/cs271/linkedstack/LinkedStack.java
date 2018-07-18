@@ -10,8 +10,7 @@ public class LinkedStack<E> implements IStack<E> {
   /** The topmost node of this stack. The stack gets pushed down from here. */
   private Node<E> top;
 
-  // TODO why don't we need an explicit constructor?
-  // Answered in Answers.md file
+  private int size = 0;
 
   @Override
   public E push(final E obj) {
@@ -56,14 +55,36 @@ public class LinkedStack<E> implements IStack<E> {
 
   @Override
   public List<E> asList() {
-    // TODO implement using an ArrayList.  Populate the ArrayList with the stack values, without deconstructing the stack!
-    // TODO add any instance variable(s) required to support this
-    List<E> preallocatedList = new ArrayList<E>();
-    while (top != null) {
-      preallocatedList.add(top.data);
-      top = top.next;
+    final ArrayList<E> result = new ArrayList<>(size);
+    populateList(top, result); // TODO replace null with the right reference
+    return result;
+  }
+
+  private void populateList(final Node<E> curr, final List<E> result) {
+    // Done recursively populate the list in the desired order
+    // Base Case
+    if (curr == null) {
+      return;
     }
-    // TODO add any instance variable(s) required to support this
-    return preallocatedList;
+    // Append the data to the end of this list.
+    result.add(curr.data);
+    populateList(curr.next, result);
+  }
+
+  @Override
+  public List<E> asFifoList() {
+    final ArrayList<E> result = new ArrayList<>(size);
+    populateFifoList(top, result); // Done replace null with the right reference
+    return result;
+  }
+
+  private void populateFifoList(final Node<E> curr, final List<E> result) {
+
+    if (curr == null) {
+      return;
+    }
+
+    result.add(0, curr.data);
+    populateFifoList(curr.next, result);
   }
 }
